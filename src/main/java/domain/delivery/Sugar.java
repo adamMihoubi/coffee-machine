@@ -4,8 +4,8 @@ package domain.delivery;
 import domain.delivery.drinks.Drink;
 
 public class Sugar extends Drink {
-    private Drink drink;
-    private String sugarNumber;
+    private final Drink drink;
+    private final String sugarNumber;
 
     public Sugar(Drink drink, String sugarNumber) {
         this.drink = drink;

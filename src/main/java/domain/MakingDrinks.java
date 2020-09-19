@@ -13,14 +13,14 @@ import domain.exceptions.BadOrderException;
 
 public class MakingDrinks {
 
-    public static Delivery makeADrink(Order order) {
+    public static Delivery makeADrink(Order order, Double money) {
         switch (order.getFirstPart()) {
             case "C":
-                return getDrink(order, new Coffee());
+                return getDrink(order, new Coffee(), money);
             case "T":
-                return getDrink(order, new Tea());
+                return getDrink(order, new Tea(), money);
             case "H":
-                return getDrink(order, new Chocolate());
+                return getDrink(order, new Chocolate(), money);
             case "M":
                 return new Message();
             default:
@@ -28,10 +28,14 @@ public class MakingDrinks {
         }
     }
 
-    private static Delivery getDrink(Order order, Drink drink) {
-        return order.getHasSecondPart() ?
-                new Sugar(drink, order.getSecondPart()) :
-                new SugarFree(drink);
+    private static Delivery getDrink(Order order, Drink drink, Double money) {
+        if (drink.verifyPrice(money)) {
+            return order.getHasSecondPart() ?
+                    new Sugar(drink, order.getSecondPart()) :
+                    new SugarFree(drink);
+        } else {
+            return new Message(String.format("please add %.2f €", drink.getPrice() - money));
+        }
     }
 
 }
