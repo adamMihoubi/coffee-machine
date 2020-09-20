@@ -12,8 +12,13 @@ import domain.delivery.drinks.OrangeJuice;
 import domain.delivery.drinks.Tea;
 import domain.exceptions.BadOrderException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MakingDrinks {
+    private static final Map<String, Double> soldDrinks = new HashMap<>();
+    private static final Map<String, Integer> numberOfSoldDrinks = new HashMap<>();
 
     public static Delivery makeADrink(Order order, Double money) {
         switch (order.getFirstPart()) {
@@ -40,6 +45,7 @@ public class MakingDrinks {
 
     private static Delivery getDrink(Order order, Drink drink, Double money) {
         if (drink.verifyPrice(money)) {
+            register(drink);
             return order.getHasSecondPart() ?
                     new Sugar(drink, order.getSecondPart()) :
                     new SugarFree(drink);
@@ -50,6 +56,7 @@ public class MakingDrinks {
 
     private static Delivery getHotDrink(Order order, Drink drink, Double money) {
         if (drink.verifyPrice(money)) {
+            register(drink);
             return order.getHasSecondPart() ?
                     new Sugar(new Hot(drink), order.getSecondPart()) :
                     new SugarFree(new Hot(drink));
@@ -59,10 +66,24 @@ public class MakingDrinks {
     }
 
     private static Delivery getOrangeJuice(Drink drink, Double money) {
-        return (drink.verifyPrice(money)) ? drink : new Message(defaultMessage(drink, money));
+        return (drink.verifyPrice(money)) ? register(drink) : new Message(defaultMessage(drink, money));
     }
 
     private static String defaultMessage(Drink drink, Double money) {
         return String.format("please add %.2f €", drink.getPrice() - money);
+    }
+
+    private static Drink register(Drink drink) {
+        soldDrinks.compute(drink.getName(), (key, value) -> value == null ? drink.getPrice() : value + drink.getPrice());
+        numberOfSoldDrinks.compute(drink.getName(), (key, value) -> value == null ? 1 : ++value);
+        return drink;
+    }
+
+    public static Map<String, Integer> getNumberOfSoldDrinks() {
+        return numberOfSoldDrinks;
+    }
+
+    public static Double getTotalMoneyEarned() {
+        return soldDrinks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 }
