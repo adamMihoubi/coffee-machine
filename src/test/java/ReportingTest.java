@@ -1,5 +1,7 @@
 import domain.MakingDrinks;
 import domain.Order;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -15,6 +17,7 @@ public class ReportingTest {
 
     @Test
     public void testReportingMap() {
+        MakingDrinks.setBeverageQuantityChecker((s) -> false);
         //given
         Map<String, Integer> expected = new HashMap<>();
         //4 coffee

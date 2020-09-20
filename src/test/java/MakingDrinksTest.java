@@ -2,6 +2,8 @@ import domain.MakingDrinks;
 import domain.Order;
 import domain.delivery.Delivery;
 import domain.exceptions.BadOrderException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,6 +14,16 @@ public class MakingDrinksTest {
     private static final Double ORANGE_JUICE_PRICE = 0.6;
     private static final Double TEA_PRICE = 0.4;
     private static final Double CHOCOLATE_PRICE = 0.5;
+
+    @BeforeAll
+    static void init() {
+        MakingDrinks.setBeverageQuantityChecker((s) -> false);
+    }
+
+    @AfterAll
+    static void clean() {
+        MakingDrinks.deleteSavedDrinks();
+    }
 
     @Test
     public void coffeeTestWith2Sugar() {

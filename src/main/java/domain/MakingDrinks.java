@@ -11,6 +11,8 @@ import domain.delivery.drinks.Drink;
 import domain.delivery.drinks.OrangeJuice;
 import domain.delivery.drinks.Tea;
 import domain.exceptions.BadOrderException;
+import services.BeverageQuantityChecker;
+import services.EmailNotifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,12 @@ import java.util.Map;
 public class MakingDrinks {
     private static final Map<String, Double> soldDrinks = new HashMap<>();
     private static final Map<String, Integer> numberOfSoldDrinks = new HashMap<>();
+    private static BeverageQuantityChecker beverageQuantityChecker;
+    private static final EmailNotifier emailNotifier = (s) -> System.out.printf("no more %s in machine%n", s);
+
+    public static void setBeverageQuantityChecker(BeverageQuantityChecker quantityChecker) {
+        beverageQuantityChecker = quantityChecker;
+    }
 
     public static Delivery makeADrink(Order order, Double money) {
         switch (order.getFirstPart()) {
@@ -44,29 +52,46 @@ public class MakingDrinks {
     }
 
     private static Delivery getDrink(Order order, Drink drink, Double money) {
-        if (drink.verifyPrice(money)) {
-            register(drink);
-            return order.getHasSecondPart() ?
-                    new Sugar(drink, order.getSecondPart()) :
-                    new SugarFree(drink);
+        if (isShortage(drink)) {
+            if (drink.verifyPrice(money)) {
+                register(drink);
+                return order.getHasSecondPart() ?
+                        new Sugar(drink, order.getSecondPart()) :
+                        new SugarFree(drink);
+            } else {
+                return new Message(defaultMessage(drink, money));
+            }
         } else {
-            return new Message(defaultMessage(drink, money));
+            return notifyIfShortage(drink);
         }
     }
 
+
     private static Delivery getHotDrink(Order order, Drink drink, Double money) {
-        if (drink.verifyPrice(money)) {
-            register(drink);
-            return order.getHasSecondPart() ?
-                    new Sugar(new Hot(drink), order.getSecondPart()) :
-                    new SugarFree(new Hot(drink));
+        if (isShortage(drink)) {
+            if (drink.verifyPrice(money)) {
+                register(drink);
+                return order.getHasSecondPart() ?
+                        new Sugar(new Hot(drink), order.getSecondPart()) :
+                        new SugarFree(new Hot(drink));
+            } else {
+                return new Message(defaultMessage(drink, money));
+            }
         } else {
-            return new Message(defaultMessage(drink, money));
+            return notifyIfShortage(drink);
         }
     }
 
     private static Delivery getOrangeJuice(Drink drink, Double money) {
-        return (drink.verifyPrice(money)) ? register(drink) : new Message(defaultMessage(drink, money));
+        if (isShortage(drink)) {
+            return (drink.verifyPrice(money)) ? register(drink) : new Message(defaultMessage(drink, money));
+        } else {
+            return notifyIfShortage(drink);
+        }
+    }
+
+    private static boolean isShortage(Drink drink) {
+        return !beverageQuantityChecker.isEmpty(drink.getName());
     }
 
     private static String defaultMessage(Drink drink, Double money) {
@@ -79,11 +104,21 @@ public class MakingDrinks {
         return drink;
     }
 
+    private static Message notifyIfShortage(Drink drink) {
+        emailNotifier.notifyMissingDrink(drink.getName());
+        return new Message("shortage of water/milk");
+    }
+
     public static Map<String, Integer> getNumberOfSoldDrinks() {
         return numberOfSoldDrinks;
     }
 
     public static Double getTotalMoneyEarned() {
         return soldDrinks.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
+
+    public static void deleteSavedDrinks() {
+        soldDrinks.clear();
+        numberOfSoldDrinks.clear();
     }
 }
