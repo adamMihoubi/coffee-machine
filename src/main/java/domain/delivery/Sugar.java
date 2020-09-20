@@ -5,7 +5,7 @@ import domain.delivery.drinks.Drink;
 
 public class Sugar extends Drink {
     private final Drink drink;
-    private final String sugarNumber;
+    private String sugarNumber;
 
     public Sugar(Drink drink, String sugarNumber) {
         this.drink = drink;
@@ -13,12 +13,12 @@ public class Sugar extends Drink {
     }
 
     public String getMessage() {
-        String s = (Integer.parseInt(sugarNumber) > 1) ? "s" : "";
+        sugarNumber = (Integer.parseInt(sugarNumber) == 1) ? "one" : "two";
         return String.join(" "
                 , drink.getMessage()
                 , "with"
                 , sugarNumber
-                , "sugar" + s
+                , "sugar"
                 , "and a stick");
     }
 }
