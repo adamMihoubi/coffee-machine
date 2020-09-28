@@ -1,24 +1,18 @@
 package domain.delivery;
 
 
-import domain.delivery.drinks.Drink;
+public enum Sugar {
+    FREE("::"),
+    ONE(":1:0"),
+    TWO(":2:0");
 
-public class Sugar extends Drink {
-    private Drink drink;
-    private String sugarNumber;
-
-    public Sugar(Drink drink, String sugarNumber) {
-        this.drink = drink;
-        this.sugarNumber = sugarNumber;
+    Sugar(String value) {
+        this.value = value;
     }
 
-    public String getMessage() {
-        String s = (Integer.parseInt(sugarNumber) > 1) ? "s" : "";
-        return String.join(" "
-                , drink.getMessage()
-                , "with"
-                , sugarNumber
-                , "sugar" + s
-                , "and a stick");
+    private String value;
+
+    public String getValue() {
+        return value;
     }
 }

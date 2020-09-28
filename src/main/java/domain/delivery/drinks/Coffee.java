@@ -1,10 +1,11 @@
 package domain.delivery.drinks;
 
+import domain.delivery.Sugar;
+
 public class Coffee extends Drink {
 
-    public String getMessage() {
-        return String.join(" ",
-                super.getMessage(),
-                "coffee");
+    public Coffee(Sugar sugar) {
+        super(sugar);
+        super.code = "C";
     }
 }

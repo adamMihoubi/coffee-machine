@@ -1,10 +1,18 @@
 package domain.delivery.drinks;
 
-import domain.delivery.Delivery;
+import domain.delivery.Sugar;
 
-public abstract class Drink implements Delivery {
+public abstract class Drink {
 
-    public String getMessage() {
-        return "Drink maker makes 1";
+    protected Sugar sugar;
+    protected String code;
+
+    public Drink(Sugar sugar) {
+        this.sugar = sugar;
+    }
+
+    @Override
+    public String toString() {
+        return code.concat(sugar.getValue());
     }
 }
