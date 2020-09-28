@@ -1,8 +1,9 @@
 package domain.delivery.drinks;
 
+import domain.delivery.Delivery;
 import domain.delivery.Sugar;
 
-public abstract class Drink {
+public abstract class Drink implements Delivery {
 
     protected Sugar sugar;
     protected String code;
