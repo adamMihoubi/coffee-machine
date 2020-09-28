@@ -7,13 +7,15 @@ public abstract class Drink implements Delivery {
 
     protected Sugar sugar;
     protected String code;
+    private final String extraHot;
 
-    public Drink(Sugar sugar) {
+    public Drink(Sugar sugar, Boolean extraHot) {
         this.sugar = sugar;
+        this.extraHot = extraHot ? "h" : "";
     }
 
     @Override
     public String toString() {
-        return code.concat(sugar.getValue());
+        return code.concat(extraHot + sugar.getValue());
     }
 }

@@ -20,7 +20,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "C:2:0";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.TWO, COFFEE_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.TWO, COFFEE_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
     }
@@ -30,7 +30,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "C:1:0";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.ONE, COFFEE_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.ONE, COFFEE_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
     }
@@ -40,7 +40,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "C::";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.FREE, COFFEE_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.FREE, COFFEE_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
 
@@ -51,7 +51,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "H:2:0";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.TWO, CHOCOLATE_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.TWO, CHOCOLATE_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
     }
@@ -61,7 +61,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "H:1:0";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.ONE, CHOCOLATE_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.ONE, CHOCOLATE_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
     }
@@ -71,7 +71,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "H::";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.FREE, CHOCOLATE_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.FREE, CHOCOLATE_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
 
@@ -82,7 +82,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "T:2:0";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.TWO, TEA_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.TWO, TEA_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
     }
@@ -92,7 +92,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "T:1:0";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.ONE, TEA_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.ONE, TEA_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
     }
@@ -102,7 +102,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "T::";
         //when
-        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.FREE, TEA_PRICE);
+        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.FREE, TEA_PRICE, false);
         //then
         assertEquals(expectedMessage, drink.toString());
 
@@ -113,7 +113,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "M:not enough money provided, please add 0,10€";
         //when
-        Delivery delivery = MakingDrinks.makeADrink(Order.TEA, Sugar.FREE, 0.3);
+        Delivery delivery = MakingDrinks.makeADrink(Order.TEA, Sugar.FREE, 0.3, false);
         //then
         assertEquals(expectedMessage, delivery.toString());
 
@@ -124,7 +124,7 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "M:not enough money provided, please add 0,10€";
         //when
-        Delivery delivery = MakingDrinks.makeADrink(Order.COFFEE, Sugar.FREE, 0.5);
+        Delivery delivery = MakingDrinks.makeADrink(Order.COFFEE, Sugar.FREE, 0.5, false);
         //then
         assertEquals(expectedMessage, delivery.toString());
 
@@ -135,10 +135,66 @@ public class MakingDrinksTest {
         //given
         String expectedMessage = "M:not enough money provided, please add 0,10€";
         //when
-        Delivery delivery = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.FREE, 0.4);
+        Delivery delivery = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.FREE, 0.4, false);
         //then
         assertEquals(expectedMessage, delivery.toString());
 
     }
+
+    @Test
+    public void extraHotTeaTest() {
+        //given
+        String expectedMessage = "Th::";
+        //when
+        Delivery drink = MakingDrinks.makeADrink(Order.TEA, Sugar.FREE, TEA_PRICE, true);
+        //then
+        assertEquals(expectedMessage, drink.toString());
+    }
+
+    @Test
+    public void extraHotCoffeeTest() {
+        //given
+        String expectedMessage = "Ch::";
+        //when
+        Delivery drink = MakingDrinks.makeADrink(Order.COFFEE, Sugar.FREE, COFFEE_PRICE, true);
+        //then
+        assertEquals(expectedMessage, drink.toString());
+    }
+
+    @Test
+    public void extraHotChocolateTest() {
+        //given
+        String expectedMessage = "Hh::";
+        //when
+        Delivery drink = MakingDrinks.makeADrink(Order.CHOCOLATE, Sugar.FREE, CHOCOLATE_PRICE, true);
+        //then
+        assertEquals(expectedMessage, drink.toString());
+
+    }
+
+    @Test
+    public void orangeJuiceTest() {
+        //given
+        String expectedMessage = "O::";
+
+        //when
+        Delivery drink = MakingDrinks.makeADrink(Order.ORANGE_JUICE, Sugar.FREE, 0.6, false);
+
+        //then
+        assertEquals(expectedMessage, drink.toString());
+    }
+
+    @Test
+    public void orangeJuiceWithNotEnoughMoneyTest() {
+        //given
+        String expectedMessage = "M:not enough money provided, please add 0,10€";
+
+        //when
+        Delivery drink = MakingDrinks.makeADrink(Order.ORANGE_JUICE, Sugar.FREE, 0.5, false);
+
+        //then
+        assertEquals(expectedMessage, drink.toString());
+    }
+
 
 }

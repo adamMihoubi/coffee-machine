@@ -4,8 +4,8 @@ import domain.delivery.Sugar;
 
 public class Tea extends Drink {
 
-    public Tea(Sugar sugar) {
-        super(sugar);
+    public Tea(Sugar sugar, Boolean extraHot) {
+        super(sugar, extraHot);
         code = "T";
     }
 
